@@ -43,5 +43,35 @@ enrutador.post('/', async (req, res) => {
   }
 });
 
+enrutador.put('/:id', async (req, res)=>{
+try{
+  const contactoActualizado =await Contacto.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators:true
+    }
+  );
+  if(!contactoActualizado){
+    return res.status(404).json({error: 'contacto no encontrado'})
+  }
+  res.json(contactoActualizado);
+}catch (error){
+  res.status(400).json({error: error,message})
+}
+});
+enrutador.delete('/:id', async (req, res)=>{
+try{
+  const eliminado = await Contacto.findByIdAndDelete(req.params.id);
+  if (!eliminado){
+    return res.status(404).json({error: 'contacto no encontrado'});
+  }
+  res.json({mensaje: 'contacto eliminado correctamente'})
+}catch (error) {
+  res.status(400).json({error: 'Id invalido'});
+}
+})
+
 module.exports = enrutador;
 
